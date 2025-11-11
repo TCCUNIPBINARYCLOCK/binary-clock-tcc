@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Binary clock</title>
+    <link
+      rel="stylesheet"
+      data-name="vs/editor/editor.main"
+      href="../../node_modules/monaco-editor/min/vs/editor/editor.main.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../../node_modules/@xterm/xterm/css/xterm.css"
+    />
+    <link rel="stylesheet" href="codicon.css" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="workbench">
+      <div class="activity-bar">
+        <button
+          id="activity-files"
+          class="action-item active"
+          title="Explorador (Ctrl+Shift+E)"
+        >
+          <i class="codicon codicon-files"></i>
+        </button>
+        <button id="activity-ai" class="action-item" title="Assistente IA">
+          <i class="codicon codicon-sparkle"></i>
+        </button>
+        <button id="activity-dashboard" class="action-item" title="Dashboard">
+          <i class="codicon codicon-graph-line"></i>
+        </button>
+
+        <div class="spacer"></div>
+
+        <button
+          id="activity-settings"
+          class="action-item"
+          title="Configurações (Ctrl+,)"
+        >
+          <i class="codicon codicon-settings-gear"></i>
+        </button>
+      </div>
+
+      <div class="sidebar">
+        <div class="sidebar-header">EXPLORADOR</div>
+        <div class="sidebar-actions">
+          <button id="open-folder-button" title="Abrir Pasta">
+            <i class="codicon codicon-folder-opened"></i>
+          </button>
+          <button id="new-file-button" title="Novo Arquivo">
+            <i class="codicon codicon-new-file"></i>
+          </button>
+        </div>
+        <div class="file-tree-panel" id="file-tree-panel">
+          <p style="padding: 10px 15px; color: #888">
+            Use <i class="codicon codicon-folder-opened"></i> para abrir uma
+            pasta.
+          </p>
+        </div>
+
+        <div class="sidebar-logo-container">
+          <img src="./logo.png" alt="Binary Clock Logo" id="sidebar-logo" />
+        </div>
+      </div>
+
+      <div class="editor-group">
+        <div class="tab-bar" id="tab-bar"></div>
+        <div class="editor-container" id="editor-container"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-tabs">
+          <button class="panel-tab active" data-target="terminal-content">
+            TERMINAL
+          </button>
+          <button class="panel-tab" data-target="ai-content">
+            ASSISTENTE IA
+          </button>
+          <div class="panel-actions">
+            <button id="panel-toggle-button" title="Alternar Painel (Ctrl+J)">
+              <i class="codicon codicon-chevron-up"></i>
+            </button>
+            <button id="panel-close-button" title="Fechar Painel (Ctrl+J)">
+              <i class="codicon codicon-close"></i>
+            </button>
+          </div>
+        </div>
+        <div class="panel-content">
+          <div id="terminal-content" class="panel-item active">
+            <div class="terminal-container" id="terminal-container"></div>
+          </div>
+          <div id="ai-content" class="panel-item">
+            <div class="ai-controls">
+              <button id="explain-button" title="Explicar código selecionado">
+                <i class="codicon codicon-comment-discussion"></i> Explicar
+              </button>
+              <button id="refactor-button" title="Refatorar código selecionado">
+                <i class="codicon codicon-lightbulb-autofix"></i> Refatorar
+              </button>
+              <button id="execute-code-button" title="Executar arquivo atual">
+                <i class="codicon codicon-play"></i> Executar
+              </button>
+              <button
+                id="save-file-button"
+                title="Salvar arquivo atual (Ctrl+S)"
+              >
+                <i class="codicon codicon-save"></i> Salvar
+              </button>
+            </div>
+            <div id="ai-output" class="ai-output">
+              Bem-vindo ao Assistente IA!
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="status-bar">
+        <div class="status-left">
+          <button
+            id="stats-button"
+            title="Ver Produtividade"
+            class="status-bar-button"
+          >
+            <i class="codicon codicon-graph"></i> Produtividade
+          </button>
+        </div>
+        <div class="status-right">
+          <span id="status-line-col" title="Ir para Linha/Coluna"
+            >Ln 1, Col 1</span
+          >
+          <span id="status-indentation" title="Configurar Indentação"
+            >Spaces: 4</span
+          >
+          <span id="status-encoding" title="Selecionar Codificação">UTF-8</span>
+          <span id="status-language" title="Selecionar Modo de Linguagem"
+            >plaintext</span
+          >
+        </div>
+      </div>
+    </div>
+    <div id="settings-modal" class="modal hidden">
+      <div class="modal-content">
+        <span class="close-button" id="close-settings-modal">&times;</span>
+        <h2>Configurações</h2>
+        <div class="form-group">
+          <label for="theme-select">Tema:</label>
+          <select id="theme-select">
+            <option value="vs-dark">Dark</option>
+            <option value="vs-light">Light</option>
+            <option value="hc-black">High Contrast</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="font-size-input">Fonte:</label>
+          <input
+            type="number"
+            id="font-size-input"
+            min="8"
+            max="40"
+            value="14"
+          />
+        </div>
+        <button id="save-settings-button">Salvar</button>
+      </div>
+    </div>
+    <div id="stats-modal" class="modal hidden">
+      <div class="modal-content">
+        <span class="close-button" id="close-stats-modal">&times;</span>
+        <h2>Produtividade</h2>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <h4>Tempo Hoje</h4>
+            <p id="stats-active-time">0h 0m 0s</p>
+          </div>
+          <div class="stat-item">
+            <h4>Sequência 🔥</h4>
+            <p><span id="stats-current-streak">0</span> d</p>
+          </div>
+          <div class="stat-item">
+            <h4>Salvos</h4>
+            <p id="stats-files-saved">0</p>
+          </div>
+          <div class="stat-item">
+            <h4>Execuções</h4>
+            <p id="stats-code-executions">0</p>
+          </div>
+          <div class="stat-item">
+            <h4>Ajuda IA</h4>
+            <p id="stats-ai-helps">0</p>
+          </div>
+          <div class="stat-item">
+            <h4>Refatorações</h4>
+            <p id="stats-ai-refactors">0</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="./renderer.js"></script>
+  </body>
+</html>

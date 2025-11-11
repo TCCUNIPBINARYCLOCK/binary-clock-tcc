@@ -1,0 +1,7 @@
+# Pastas de dependência e build
+node_modules/
+dist/
+
+# Arquivos Chave API
+.env
+

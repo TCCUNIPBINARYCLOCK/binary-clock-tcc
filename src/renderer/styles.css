@@ -1,0 +1,588 @@
+/* ===========================
+   Binary Clock UI Theme (VSCode-like)
+   Paleta roxo/azulada + botões gradiente
+   =========================== */
+
+/* ---------- Paleta e tokens ---------- */
+:root {
+  /* Fundos */
+  --bg-0: #0e0f18;
+  --bg-1: #171827;
+  --bg-2: #1f2133;
+  --bg-3: #25273c;
+
+  /* Fundo translúcido para o painel IA */
+  --bg-2-translucent: rgba(31, 33, 51, 0.75); /* 75% opaco */
+
+  /* Texto */
+  --fg-0: #f3f4f6;
+  --fg-1: #c7c9d3;
+  --fg-2: #9aa0b4;
+
+  /* Acentos */
+  --ac-purple: #a78bfa;
+  --ac-purple-2: #c4b5fd;
+  --ac-blue: #60a5fa;
+  --ac-blue-2: #93c5fd;
+
+  /* Estados/realces */
+  --border: #2b2e44;
+  --hover: #2a2d46;
+  --shadow: 0 0 10px rgba(0, 0, 0, 0.35);
+
+  /* Status bar */
+  --statusbar: #0b5fa5;
+}
+
+/* ---------- Reset ---------- */
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  background: var(--bg-0);
+  color: var(--fg-0);
+  overflow: hidden;
+  font-size: 13px;
+}
+button {
+  cursor: pointer;
+  border: 0;
+  background: none;
+  color: inherit;
+}
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+i.codicon {
+  vertical-align: middle;
+}
+
+/* ---------- Watermark sutil ---------- */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(transparent 60%, rgba(0, 0, 0, 0.25)) center/140%
+      140% no-repeat,
+    repeating-linear-gradient(
+      0deg,
+      transparent 0 28px,
+      rgba(255, 255, 255, 0.04) 28px 29px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 22px,
+      rgba(255, 255, 255, 0.04) 22px 23px
+    );
+  opacity: 0.45;
+  mix-blend-mode: soft-light;
+  z-index: 0;
+}
+
+/* ---------- Grid principal ---------- */
+.workbench {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 48px 250px 1fr;
+  grid-template-rows: 1fr 220px 22px;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* ---------- Activity Bar ---------- */
+/* !!! MUDANÇA: Activity Bar preparada para o fundo !!! */
+.activity-bar {
+  grid-column: 1/2;
+  grid-row: 1/3;
+  background: transparent; /* <--- MUDADO */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 10px;
+  border-right: 1px solid var(--border);
+  position: relative;
+  z-index: 1;
+}
+.activity-bar .action-item {
+  width: 100%;
+  padding: 12px 0;
+  margin-bottom: 6px;
+  color: var(--fg-2);
+  font-size: 22px;
+  position: relative;
+  z-index: 2; /* Fica na frente do fundo */
+}
+.activity-bar .action-item:hover {
+  color: var(--fg-0);
+  background: rgba(255, 255, 255, 0.03);
+}
+.activity-bar .action-item.active {
+  color: #fff;
+}
+.activity-bar .action-item.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 60%;
+  background: linear-gradient(180deg, var(--ac-purple), var(--ac-blue));
+}
+.activity-bar .spacer {
+  flex: 1;
+  z-index: 2;
+}
+
+/* ---------- Sidebar ---------- */
+/* Sidebar preparada para o fundo e para a LOGO */
+.sidebar {
+  grid-column: 2/3;
+  grid-row: 1/3;
+  background: transparent; /* <--- MUDADO */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-right: 1px solid var(--border);
+  position: relative;
+  z-index: 1;
+}
+/* Conteúdo da Sidebar com fundo sólido */
+.sidebar-header {
+  padding: 10px 14px;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.6px;
+  color: var(--fg-2);
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-1);
+  position: relative;
+  z-index: 2;
+}
+.sidebar-actions {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-1);
+  position: relative;
+  z-index: 2;
+}
+.sidebar-actions button {
+  color: var(--fg-1);
+  padding: 6px;
+  border-radius: 6px;
+  background: var(--bg-2);
+}
+.sidebar-actions button:hover {
+  background: var(--hover);
+  color: var(--fg-0);
+}
+
+.file-tree-panel {
+  flex: 1;
+  overflow: auto;
+  padding: 6px 0;
+  background: var(--bg-1);
+  position: relative;
+  z-index: 2;
+}
+.file-tree-panel p {
+  color: var(--fg-2);
+  margin: 8px 0 0 0;
+}
+.file-tree-panel li {
+  padding: 6px 14px;
+  white-space: nowrap;
+}
+.file-tree-panel li:hover {
+  background: var(--hover);
+}
+.file-tree-panel .file-item::before {
+  content: "\ea7b";
+  font-family: codicon;
+  margin-right: 6px;
+  color: var(--fg-2);
+}
+.file-tree-panel .folder-item::before {
+  content: "\ea83";
+  font-family: codicon;
+  margin-right: 6px;
+  color: var(--fg-2);
+}
+
+/* ---------- Editor Group ---------- */
+/* Editor Group com fundo sólido */
+.editor-group {
+  grid-column: 3/4;
+  grid-row: 1/2;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg-0);
+  position: relative;
+  z-index: 1;
+}
+.tab-bar {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  flex-shrink: 0;
+  background: var(--bg-1);
+  border-bottom: 1px solid var(--border);
+}
+.tab {
+  padding: 8px 12px;
+  background: var(--bg-3);
+  color: var(--fg-2);
+  border-right: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.tab:hover {
+  background: var(--hover);
+  color: var(--fg-0);
+}
+.tab.active {
+  background: var(--bg-0);
+  color: #fff;
+  position: relative;
+}
+.tab.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--ac-purple), var(--ac-blue));
+}
+.tab span:first-child {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 8px;
+}
+.tab .close-tab {
+  margin-left: 6px;
+  color: var(--fg-2);
+  font-size: 16px;
+}
+.tab .close-tab:hover {
+  color: var(--fg-0);
+}
+
+.editor-container {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+.monaco-editor .monaco-editor-background {
+  /* Fundo normal */
+}
+
+/* ---------- Panel (Terminal / Assistente IA) ---------- */
+/* Painel preparado para o fundo */
+.panel {
+  grid-column: 3/4;
+  grid-row: 2/3;
+  background: transparent;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  position: relative;
+  z-index: 1;
+}
+.panel-tabs {
+  display: flex;
+  align-items: center;
+  background: var(--bg-1);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  z-index: 2;
+}
+.panel-tab {
+  padding: 8px 16px;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  cursor: pointer;
+}
+.panel-tab:hover {
+  color: var(--fg-0);
+}
+.panel-tab.active {
+  color: #fff;
+  border-bottom-color: var(--ac-blue);
+}
+.panel-actions {
+  margin-left: auto;
+  display: flex;
+  padding-right: 6px;
+}
+.panel-actions button {
+  color: var(--fg-2);
+  padding: 6px;
+  border-radius: 6px;
+  background: transparent;
+}
+.panel-actions button:hover {
+  background: var(--hover);
+  color: var(--fg-0);
+}
+
+.panel-content {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.panel-item {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+}
+.panel-item:not(.active) {
+  display: none;
+}
+
+/* !!! MUDANÇA: FUNDO BINÁRIO (010101) !!! */
+.activity-bar::before,
+.sidebar::before,
+.panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("./background.jpg");
+  background-size: cover;
+  background-position: center;
+  opacity: 0.2;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* --- Container para a LOGO --- */
+.sidebar-logo-container {
+  position: relative;
+  z-index: 2;
+  margin-top: auto;
+  padding: 20px 10px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-1);
+  text-align: center;
+}
+
+#sidebar-logo {
+  width: 80%;
+  height: auto;
+  opacity: 1;
+}
+
+/* ---------- Terminal ---------- */
+.terminal-container {
+  height: 100%;
+  width: 100%;
+  padding: 6px;
+  background: transparent;
+  overflow: hidden;
+  position: relative;
+  z-index: 2;
+}
+.terminal-container .terminal,
+.terminal-container .xterm-viewport,
+.terminal-container .xterm-screen {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* ---------- Assistente IA ---------- */
+#ai-content {
+  padding: 14px;
+  gap: 12px;
+  position: relative;
+  z-index: 2;
+}
+.ai-controls {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(140px, 1fr));
+  gap: 12px;
+  align-items: center;
+}
+.ai-controls button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #fff;
+  background: linear-gradient(90deg, var(--ac-purple), var(--ac-blue));
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+.ai-controls button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 12px rgba(96, 165, 250, 0.35);
+  filter: saturate(1.05);
+}
+.ai-controls button i {
+  font-size: 16px;
+}
+
+.ai-output {
+  flex: 1;
+  min-height: 60px;
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--bg-2-translucent);
+  border: 1px solid var(--border);
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--fg-0);
+  box-shadow: var(--shadow);
+}
+
+/* ---------- Status Bar ---------- */
+.status-bar {
+  grid-column: 1/4;
+  grid-row: 3/4;
+  height: 22px;
+  background: var(--statusbar);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  font-size: 12px;
+  z-index: 2;
+}
+.status-bar .status-bar-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+}
+.status-bar .status-bar-button:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+.status-right span {
+  margin-left: 10px;
+  opacity: 0.95;
+}
+
+/* ---------- Modais ---------- */
+.modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 100;
+}
+.modal.hidden {
+  display: none;
+}
+.modal-content {
+  width: min(560px, 90%);
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 26px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
+  position: relative;
+}
+.close-button {
+  position: absolute;
+  right: 16px;
+  top: 10px;
+  font-size: 28px;
+  color: var(--fg-1);
+}
+.close-button:hover {
+  color: #fff;
+}
+.form-group {
+  margin-bottom: 16px;
+}
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--fg-1);
+}
+.form-group select,
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-1);
+  color: var(--fg-0);
+}
+#save-settings-button {
+  padding: 10px 16px;
+  border-radius: 8px;
+  color: #fff;
+  background: linear-gradient(90deg, var(--ac-purple), var(--ac-blue));
+}
+#save-settings-button:hover {
+  box-shadow: 0 0 10px rgba(96, 165, 250, 0.35);
+}
+
+/* ---------- Grid de métricas ---------- */
+.stats-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+.stat-item {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  padding: 18px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+.stat-item h4 {
+  margin: 0 0 10px;
+  color: var(--ac-blue);
+  font-size: 14px;
+  font-weight: 600;
+}
+.stat-item p {
+  margin: 0;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+}
