@@ -1,0 +1,5 @@
+psycopg2-binary
+pynput
+psutil
+pywin32
+https://lookerstudio.google.com/s/hYGufeBhKus
